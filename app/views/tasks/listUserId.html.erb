@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tasks of user <%=@user.email%></h1>
+ <table class="table table-hover table-bordered" id='tasks_list<%=@user.id%>' >
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Checked</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @tasks.each do |task| %>
+    <%= form_with(model: task) do |form| %>
+    <tr id = <%= task.id %>>
+      <td><%= task.name %></td>
+      <td><%= task.description %></td>
+      <td><%= form.check_box :checked, id: :checkbox_list, disabled: true %></td>
+    </tr>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>

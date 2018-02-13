@@ -1,0 +1,31 @@
+$(function() {
+    //webSocket
+    var pusher = new Pusher('95b419d449b8e83152e5', {
+        cluster: 'eu',
+        encrypted: true
+    });
+    //channel for creating task
+    var channelCreate = pusher.subscribe('Create');
+    channelCreate.bind('new', function(data) {
+        var s = '';
+        if(data.model.checked) s = ' checked="checked"';
+        $('#tasks_list' + data.model.userId + ' tbody').append('<tr id = ' +data.model.id +'><td>' + data.model.name + '</td><td>' + data.model.description + '</td><td>' +
+            '<input id="checkbox_list" disabled="disabled" type="checkbox" value="1" '+ s + ' name="task[checked]"></td></tr>');
+    });
+    //channel for deleting task
+    var channelDestroy = pusher.subscribe('Destroy');
+    channelDestroy.bind('task', function(data) {
+        $('#tasks_list' + data.model.userId + ' tbody tr#'+ data.model.id).remove();
+    });
+    //channel for updating task
+    var channeUpdate= pusher.subscribe('Update');
+    channeUpdate.bind('task', function (data) {
+        var s = '';
+        if(data.model.checked) s = ' checked="checked"';
+        $('#tasks_list'+ data.model.userId +' tbody tr#'+ data.model.id+ ' td').remove();
+        $('#tasks_list'+ data.model.userId +' tbody tr#'+ data.model.id).append('<td>' + data.model.name + '</td><td>' + data.model.description + '</td><td>' +
+            '<input id="checkbox_list" disabled="disabled" type="checkbox" value="1" '+ s + ' name="task[checked]"></td></tr>');
+    });
+
+});
+
