@@ -7,6 +7,8 @@ class TasksController < ApplicationController
     if user_signed_in?
       @tasks = Task.all
       @task = Task.new
+      @list = List.find(list_param)
+      @task.listId = @list.id
     else
       redirect_to user_session_path
     end
@@ -16,6 +18,7 @@ class TasksController < ApplicationController
     @tasks = Task.where(:userId => user_param)
     begin
       @user = User.find(user_param)
+      @list = List.find(user_list)
     rescue
       render 'tasks/listUserIdError'
     end
@@ -44,7 +47,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.save
         format.html do
-          redirect_to tasks_url
+          redirect_to controller: 'tasks', action: 'index', listId: @task.listId
           Pusher.trigger('Create', 'new', model: @task)
         end
         format.json { render :show, status: :created, location: @task }
@@ -60,7 +63,7 @@ class TasksController < ApplicationController
   def update
     respond_to do |format|
       if @task.update(task_params)
-        format.html { redirect_to tasks_url, notice: 'Task was successfully updated.' }
+        format.html { redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully updated.' }
         format.json { render :show, status: :ok, location: @task }
         @task.userId = current_user.id
         Pusher.trigger('Update', 'task', model: @task)
@@ -76,7 +79,7 @@ class TasksController < ApplicationController
   def destroy
     respond_to do |format|
       format.html do
-        redirect_to tasks_url, notice: 'Task was successfully destroyed.'
+        redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully destroyed.'
         @task.userId = current_user.id
         Pusher.trigger('Destroy', 'task', model: @task)
       end
@@ -93,10 +96,14 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:id, :name, :description, :checked, :userId)
+      params.require(:task).permit(:id, :name, :description, :checked, :userId, :listId)
     end
 
     def user_param
       params.require(:userId)
+    end
+
+    def list_param
+      params.require(:listId)
     end
 end

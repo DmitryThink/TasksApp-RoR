@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Tasks</h1>
+<h1>Tasks <%= link_to 'Back', lists_path %></h1>
 
 <table class="table table-hover table-bordered">
   <thead>
@@ -14,12 +14,12 @@
 
   <tbody>
     <%= render 'form', task: @task %>
-    </td>
+
     <% @tasks.each do |task| %>
-    <% if task.userId == current_user.id  %>
+    <% if task.listId == @list.id  %>
       <tr>
         <%= render 'form', task: task %>
-        <%= button_to 'Delete' , task, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-warning'  %></td>
+        <td>  <%= button_to 'Delete' , task, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-warning'  %></td>
       </tr>
     <% end %>
     <% end %>

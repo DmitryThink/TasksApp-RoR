@@ -1,0 +1,22 @@
+<%= form_with(model: list, class: 'formlist', id: 'new_list') do |form| %>
+  <% if list.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(list.errors.count, "error") %> prohibited this task from being saved:</h2>
+      <ul>
+        <% list.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <td><%= form.text_field :name, id: :list_name, class: 'form-control' %></td>
+  <% if list.id %>
+    <td><%= link_to 'Link', controller: 'tasks', action: 'index', listId: list.id %></td>
+  <% else %>
+    <td> </td>
+  <% end %>
+  <td>
+    <%= form.submit( class: 'btn btn-primary' ) %>
+  </td>
+<% end %>

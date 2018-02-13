@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Lists</h1>
+
+<table class="table table-hover table-bordered">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Link</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= render 'form', list: @list %>
+
+    <% @lists.each do |list| %>
+      <% if list.userId == current_user.id  %>
+        <tr>
+          <%= render 'form', list: list %>
+          <td> <%= button_to 'Delete' , list, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-warning'  %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+
+
