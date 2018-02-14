@@ -13,3 +13,7 @@
  *=  require_tree .
  *= require_self
  */
+div.col{
+    border: 1px solid black;
+    padding: 3px;
+}

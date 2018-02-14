@@ -1,0 +1,22 @@
+<p id="notice"><%= notice %></p>
+
+<h1>List of user <%=@user.email%></h1>
+<table class="table table-hover table-bordered" id='lists_list<%=@user.id%>' >
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Link to tasks</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @lists.each do |list| %>
+    <%= form_with(model: list) do |form| %>
+      <tr id = <%= list.id %>>
+        <td><%= list.name %></td>
+        <td><%= link_to 'Link to tasks', controller: 'tasks', action: 'listUserId', userId: @user.id, listId: list.id  %></td>
+      </tr>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>

@@ -1,20 +1,23 @@
-<%= form_with(model: task, class: 'formtask', id: 'new_task') do |form| %>
+<%= form_with(model: task, class: 'row', id: 'new_task') do |form| %>
   <% if task.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
 
       <ul>
-      <% task.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
   <%= form.hidden_field :listId, id: :task_listId %>
-  <td><%= form.text_field :name, id: :task_name, class: 'form-control' %></td>
-  <td><%= form.text_area :description, id: :task_description, class: 'form-control' %></td>
-  <td><%= form.check_box :checked, id: :task_checked%></td>
-  <td>
+  <div class="col "><%= form.text_field :name, id: :task_name, class: 'form-control' %></div>
+  <div class="col "><%= form.text_area :description, id: :task_description, class: 'form-control' %></div>
+  <div class="col "><%= form.check_box :checked, id: :task_checked%></div>
+  <div class="col ">
     <%= form.submit( class: 'btn btn-primary' ) %>
-  </td>
+    <% if task.id %>
+      <%= link_to 'Delete' , task, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-warning'  %>
+    <% end %>
+  </div>
 <% end %>

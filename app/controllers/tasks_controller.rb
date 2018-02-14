@@ -15,10 +15,10 @@ class TasksController < ApplicationController
   end
 
   def listUserId
-    @tasks = Task.where(:userId => user_param)
+    @tasks = Task.where(:userId => user_param, :listId => list_param)
     begin
       @user = User.find(user_param)
-      @list = List.find(user_list)
+      @list = List.find(list_param)
     rescue
       render 'tasks/listUserIdError'
     end
@@ -48,7 +48,7 @@ class TasksController < ApplicationController
       if @task.save
         format.html do
           redirect_to controller: 'tasks', action: 'index', listId: @task.listId
-          Pusher.trigger('Create', 'new', model: @task)
+          Pusher.trigger('CreateTask', 'task', model: @task)
         end
         format.json { render :show, status: :created, location: @task }
       else
@@ -66,7 +66,7 @@ class TasksController < ApplicationController
         format.html { redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully updated.' }
         format.json { render :show, status: :ok, location: @task }
         @task.userId = current_user.id
-        Pusher.trigger('Update', 'task', model: @task)
+        Pusher.trigger('UpdateTask', 'task', model: @task)
       else
         format.html { render :edit }
         format.json { render json: @task.errors, status: :unprocessable_entity }
@@ -81,7 +81,7 @@ class TasksController < ApplicationController
       format.html do
         redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully destroyed.'
         @task.userId = current_user.id
-        Pusher.trigger('Destroy', 'task', model: @task)
+        Pusher.trigger('DestroyTask', 'task', model: @task)
       end
       format.json { head :no_content }
     end

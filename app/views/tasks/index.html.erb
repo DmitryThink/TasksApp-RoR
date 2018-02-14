@@ -1,28 +1,21 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Tasks <%= link_to 'Back', lists_path %></h1>
+<h1>Tasks by list "<%= @list.name %>" <%= link_to 'Back', lists_path %></h1>
 
-<table class="table table-hover table-bordered">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Checked</th>
-      <th>Action</th>
-    </tr>
-  </thead>
+<div class="container" >
+  <div class="row">
+    <div class="col">Name</div>
+    <div class="col">Description</div>
+    <div class="col">Checked</div>
+    <div class="col">Action</div>
+  </div>
 
-  <tbody>
-    <%= render 'form', task: @task %>
+  <%= render 'form', task: @task %>
 
-    <% @tasks.each do |task| %>
+  <% @tasks.each do |task| %>
     <% if task.listId == @list.id  %>
-      <tr>
         <%= render 'form', task: task %>
-        <td>  <%= button_to 'Delete' , task, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-warning'  %></td>
-      </tr>
     <% end %>
-    <% end %>
-  </tbody>
-</table>
+  <% end %>
 
+</div>

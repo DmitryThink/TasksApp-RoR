@@ -1,28 +1,26 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Lists</h1>
+<h1 > Lists </h1>
+<h2> <%= link_to "Your public link", {controller: 'lists', action: 'userId', userId: current_user.id} %> </h2>
 
-<table class="table table-hover table-bordered">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Link</th>
-      <th>Action</th>
-    </tr>
-  </thead>
+<div class="container" >
+  <div class="row">
+    <div class="col">Name</div>
+    <div class="col">Action</div>
+  </div>
+  <%= render 'form', list: @list %>
+  <br>
+  <div class="row">
+      <div class="col">Name</div>
+      <div class="col">Link to tasks</div>
+      <div class="col">Action</div>
+  </div>
 
-  <tbody>
-    <%= render 'form', list: @list %>
-
-    <% @lists.each do |list| %>
-      <% if list.userId == current_user.id  %>
-        <tr>
-          <%= render 'form', list: list %>
-          <td> <%= button_to 'Delete' , list, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-warning'  %></td>
-        </tr>
-      <% end %>
+  <% @lists.each do |list| %>
+    <% if list.userId == current_user.id  %>
+        <%= render 'form', list: list %>
     <% end %>
-  </tbody>
-</table>
+  <% end %>
+</div>
 
 

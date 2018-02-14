@@ -5,26 +5,42 @@ $(function() {
         encrypted: true
     });
     //channel for creating task
-    var channelCreate = pusher.subscribe('Create');
-    channelCreate.bind('new', function(data) {
+    var channelCreateTask = pusher.subscribe('CreateTask');
+    channelCreateTask.bind('task', function(data) {
         var s = '';
         if(data.model.checked) s = ' checked="checked"';
         $('#tasks_list' + data.model.userId + ' tbody').append('<tr id = ' +data.model.id +'><td>' + data.model.name + '</td><td>' + data.model.description + '</td><td>' +
             '<input id="checkbox_list" disabled="disabled" type="checkbox" value="1" '+ s + ' name="task[checked]"></td></tr>');
     });
     //channel for deleting task
-    var channelDestroy = pusher.subscribe('Destroy');
-    channelDestroy.bind('task', function(data) {
+    var channelDestroyTask = pusher.subscribe('DestroyTask');
+    channelDestroyTask.bind('task', function(data) {
         $('#tasks_list' + data.model.userId + ' tbody tr#'+ data.model.id).remove();
     });
     //channel for updating task
-    var channeUpdate= pusher.subscribe('Update');
-    channeUpdate.bind('task', function (data) {
+    var channeUpdateTask= pusher.subscribe('UpdateTask');
+    channeUpdateTask.bind('task', function (data) {
         var s = '';
         if(data.model.checked) s = ' checked="checked"';
         $('#tasks_list'+ data.model.userId +' tbody tr#'+ data.model.id+ ' td').remove();
         $('#tasks_list'+ data.model.userId +' tbody tr#'+ data.model.id).append('<td>' + data.model.name + '</td><td>' + data.model.description + '</td><td>' +
             '<input id="checkbox_list" disabled="disabled" type="checkbox" value="1" '+ s + ' name="task[checked]"></td></tr>');
+    });
+    //channel for creating list
+    var channelCreateList = pusher.subscribe('CreateList');
+    channelCreateList.bind('list', function(data) {
+        $('#lists_list' + data.model.userId + ' tbody').append('<tr id = ' +data.model.id +'><td>' + data.model.name + '</td><td> <a href="/lists/user/' + data.model.userId + '/' + data.model.id+ '">Link to tasks</a> </td></tr>');
+    });
+    //channel for deleting list
+    var channelDestroyList = pusher.subscribe('DestroyList');
+    channelDestroyList.bind('list', function(data) {
+        $('#lists_list' + data.model.userId + ' tbody tr#'+ data.model.id).remove();
+    });
+    //channel for updating list
+    var channeUpdateList = pusher.subscribe('UpdateList');
+    channeUpdateList.bind('list', function (data) {
+        $('#lists_list'+ data.model.userId +' tbody tr#'+ data.model.id+ ' td').remove();
+        $('#lists_list'+ data.model.userId +' tbody tr#'+ data.model.id).append('<td>' + data.model.name + '</td><td> <a href="/lists/user/' + data.model.userId + '/' + data.model.id+ '">Link to tasks</a> </td></tr>');
     });
 
 });

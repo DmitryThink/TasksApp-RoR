@@ -1,4 +1,4 @@
-<%= form_with(model: list, class: 'formlist', id: 'new_list') do |form| %>
+<%= form_with(model: list, class: 'row', id: 'new_list') do |form| %>
   <% if list.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(list.errors.count, "error") %> prohibited this task from being saved:</h2>
@@ -10,13 +10,15 @@
     </div>
   <% end %>
 
-  <td><%= form.text_field :name, id: :list_name, class: 'form-control' %></td>
+  <div class="col"><%= form.text_field :name, id: :list_name, class: 'form-control' %></div>
   <% if list.id %>
-    <td><%= link_to 'Link', controller: 'tasks', action: 'index', listId: list.id %></td>
-  <% else %>
-    <td> </td>
+    <div class="col"><%= link_to 'Link to tasks', controller: 'tasks', action: 'index', listId: list.id  %></div>
+
   <% end %>
-  <td>
+  <div class="col">
     <%= form.submit( class: 'btn btn-primary' ) %>
-  </td>
+    <% if list.id %>
+      <%= link_to 'Delete' , list, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-warning'  %>
+    <% end %>
+  </div>
 <% end %>

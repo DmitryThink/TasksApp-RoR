@@ -12,6 +12,14 @@ class ListsController < ApplicationController
     end
   end
 
+  def userId
+    @lists = List.where(:userId => user_param)
+    begin
+      @user = User.find(user_param)
+    rescue
+      render 'list/UserIdError'
+    end
+  end
   # GET /lists/1
   # GET /lists/1.json
   def show
@@ -36,6 +44,7 @@ class ListsController < ApplicationController
       if @list.save
         format.html { redirect_to lists_url, notice: 'List was successfully created.' }
         format.json { render :show, status: :created, location: @list }
+        Pusher.trigger('CreateList', 'list', model: @list)
       else
         format.html { render :new }
         format.json { render json: @list.errors, status: :unprocessable_entity }
@@ -50,6 +59,8 @@ class ListsController < ApplicationController
       if @list.update(list_params)
         format.html { redirect_to lists_url, notice: 'List was successfully updated.' }
         format.json { render :show, status: :ok, location: @list }
+        @list.userId = current_user.id
+        Pusher.trigger('UpdateList', 'list', model: @list)
       else
         format.html { render :edit }
         format.json { render json: @list.errors, status: :unprocessable_entity }
@@ -60,11 +71,13 @@ class ListsController < ApplicationController
   # DELETE /lists/1
   # DELETE /lists/1.json
   def destroy
-    @list.destroy
     respond_to do |format|
       format.html { redirect_to lists_url, notice: 'List was successfully destroyed.' }
       format.json { head :no_content }
+      @list.userId = current_user.id
+      Pusher.trigger('DestroyList', 'list', model: @list)
     end
+    @list.destroy
   end
 
   private
@@ -76,5 +89,8 @@ class ListsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def list_params
       params.require(:list).permit(:name, :userId)
+    end
+    def user_param
+      params.require(:userId)
     end
 end
