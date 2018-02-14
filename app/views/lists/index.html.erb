@@ -1,7 +1,6 @@
-<p id="notice"><%= notice %></p>
-
-<h1 > Lists </h1>
-<h2> <%= link_to "Your public link", {controller: 'lists', action: 'userId', userId: current_user.id} %> </h2>
+<h1 > Lists  </h1>
+<h3 class="text-info" style="float: right;"><%= notice %></h3>
+<h2> <%= link_to "Your public link", {controller: 'lists', action: 'publicIndex', userId: current_user.id} %> </h2>
 
 <div class="container" >
   <div class="row">

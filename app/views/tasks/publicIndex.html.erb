@@ -1,19 +1,19 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Tasks by list "<%= @list.name %>" of user <%=@user.email%> <%= link_to 'Back', controller: 'lists', action: 'userId', userId: @user.id %></h1>
+<h1>Tasks by list "<%= @list.name %>" of user <%=@user.email%> <%= link_to 'Back', controller: 'lists', action: 'publicIndex', userId: @user.id %></h1>
  <table class="table table-hover table-bordered" id='tasks_list<%=@user.id%>' >
   <thead>
   <tr>
     <th>Name</th>
     <th>Description</th>
-    <th>Checked</th>
+    <th>Done</th>
   </tr>
   </thead>
 
   <tbody>
   <% @tasks.each do |task| %>
     <%= form_with(model: task) do |form| %>
-    <tr id = <%= task.id %>>
+    <tr id = "task<%= task.id %>">
       <td><%= task.name %></td>
       <td><%= task.description %></td>
       <td><%= form.check_box :checked, id: :checkbox_list, disabled: true %></td>

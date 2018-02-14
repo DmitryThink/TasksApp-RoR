@@ -1,8 +1,6 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
 
-  # GET /tasks
-  # GET /tasks.json
   def index
     if user_signed_in?
       @tasks = Task.all
@@ -14,77 +12,41 @@ class TasksController < ApplicationController
     end
   end
 
-  def listUserId
+  def publicIndex
     @tasks = Task.where(:userId => user_param, :listId => list_param)
     begin
       @user = User.find(user_param)
       @list = List.find(list_param)
     rescue
-      render 'tasks/listUserIdError'
+      render 'tasks/publicIndexError'
     end
   end
 
-  # GET /tasks/1
-  # GET /tasks/1.json
-  def show
-
-  end
-
-  # GET /tasks/new
-  def new
-    @task = Task.new
-  end
-
-  # GET /tasks/1/edit
-  def edit
-  end
-
-  # POST /tasks
-  # POST /tasks.json
   def create
     @task = Task.new(task_params)
     @task.userId = current_user.id
-    respond_to do |format|
-      if @task.save
-        format.html do
-          redirect_to controller: 'tasks', action: 'index', listId: @task.listId
-          Pusher.trigger('CreateTask', 'task', model: @task)
-        end
-        format.json { render :show, status: :created, location: @task }
-      else
-        format.html { render :new }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
-      end
+    if @task.save
+      redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully updated.'
+      Pusher.trigger('CreateTask', 'task', model: @task)
+    else
+      redirect_to controller: 'tasks', action: 'index', listId: list_param, notice: 'Something wrong!'
     end
   end
 
-  # PATCH/PUT /tasks/1
-  # PATCH/PUT /tasks/1.json
   def update
-    respond_to do |format|
-      if @task.update(task_params)
-        format.html { redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully updated.' }
-        format.json { render :show, status: :ok, location: @task }
-        @task.userId = current_user.id
-        Pusher.trigger('UpdateTask', 'task', model: @task)
-      else
-        format.html { render :edit }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
-      end
+    if @task.update(task_params)
+      redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully updated.'
+      @task.userId = current_user.id
+      Pusher.trigger('UpdateTask', 'task', model: @task)
+    else
+      redirect_to controller: 'tasks', action: 'index', listId: list_param, notice: 'Something wrong!'
     end
   end
 
-  # DELETE /tasks/1
-  # DELETE /tasks/1.json
   def destroy
-    respond_to do |format|
-      format.html do
-        redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully destroyed.'
-        @task.userId = current_user.id
-        Pusher.trigger('DestroyTask', 'task', model: @task)
-      end
-      format.json { head :no_content }
-    end
+    redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully destroyed.'
+    @task.userId = current_user.id
+    Pusher.trigger('DestroyTask', 'task', model: @task)
     @task.destroy
   end
 

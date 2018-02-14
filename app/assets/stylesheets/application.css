@@ -15,5 +15,6 @@
  */
 div.col{
     border: 1px solid black;
-    padding: 3px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }

@@ -12,9 +12,9 @@
   <tbody>
   <% @lists.each do |list| %>
     <%= form_with(model: list) do |form| %>
-      <tr id = <%= list.id %>>
+      <tr id = "list<%= list.id %>">
         <td><%= list.name %></td>
-        <td><%= link_to 'Link to tasks', controller: 'tasks', action: 'listUserId', userId: @user.id, listId: list.id  %></td>
+        <td><%= link_to 'Link to tasks', controller: 'tasks', action: 'publicIndex', userId: @user.id, listId: list.id  %></td>
       </tr>
     <% end %>
   <% end %>
