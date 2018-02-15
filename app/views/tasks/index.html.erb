@@ -1,18 +1,33 @@
-<h3 class="text-info" style="float: right;"><%= notice %></h3>
+<h1>Tasks by list "<%= @list.name %>"</h1>
+<h2 > <%= link_to 'Back', lists_path %> </h2>
+<% flash.each do |key, value| %>
+  <% if key == 'notice' %>
+    <h3 class="text-info" ><%= content_tag :div, value, class: "flash #{key}" %> </h3>
+  <% else %>
+    <h3 class="text-danger" ><%= content_tag :div, value, class: "flash #{key}" %> </h3>
+  <% end %>
+<% end %>
 
-<h1>Tasks by list "<%= @list.name %>" <%= link_to 'Back', lists_path %></h1>
 
 <div class="container" >
+
+  <div class="row">
+    <div class="col">Name</div>
+    <div class="col">Description</div>
+    <div class="col">Action</div>
+  </div>
+  <%= render 'form', task: @task %>
+
+  <br>
+
   <div class="row">
     <div class="col">Name</div>
     <div class="col">Description</div>
     <div class="col">Done</div>
     <div class="col">Action</div>
   </div>
-
-  <%= render 'form', task: @task %>
-
   <% @tasks.each do |task| %>
+
     <% if task.listId == @list.id  %>
         <%= render 'form', task: task %>
     <% end %>

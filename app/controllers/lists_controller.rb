@@ -19,6 +19,14 @@ class ListsController < ApplicationController
     end
   end
 
+  def errors
+    if @list.errors.any?
+      @list.errors.full_messages.each do |message|
+        flash[message] = message
+      end
+    end
+  end
+
   def create
     @list = List.new(list_params)
     @list.userId = current_user.id
@@ -26,7 +34,8 @@ class ListsController < ApplicationController
       redirect_to lists_url, notice: 'List was successfully created.'
       Pusher.trigger('CreateList', 'list', model: @list)
     else
-      redirect_to lists_url, notice: 'Something wrong!'
+      errors
+      redirect_to lists_url
     end
   end
 
@@ -36,7 +45,8 @@ class ListsController < ApplicationController
       @list.userId = current_user.id
       Pusher.trigger('UpdateList', 'list', model: @list)
     else
-      redirect_to lists_url, notice: 'Something wrong!'
+      errors
+      redirect_to lists_url
     end
   end
 

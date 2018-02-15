@@ -12,7 +12,9 @@
   <%= form.hidden_field :listId, id: :task_listId %>
   <div class="col "><%= form.text_field :name, id: :task_name, class: 'form-control' %></div>
   <div class="col "><%= form.text_area :description, id: :task_description, class: 'form-control' %></div>
-  <div class="col "><%= form.check_box :checked, id: :task_checked%></div>
+  <% if task.id %>
+    <div class="col "><%= form.check_box :checked, id: :task_checked%></div>
+  <% end %>
   <div class="col ">
     <%= form.submit( class: 'btn btn-primary' ) %>
     <% if task.id %>

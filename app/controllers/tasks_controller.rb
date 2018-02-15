@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
 
+
   def index
     if user_signed_in?
       @tasks = Task.all
@@ -22,29 +23,39 @@ class TasksController < ApplicationController
     end
   end
 
+  def errors
+    if @task.errors.any?
+      @task.errors.full_messages.each do |message|
+        flash[message] = message
+      end
+    end
+  end
+
   def create
     @task = Task.new(task_params)
     @task.userId = current_user.id
     if @task.save
-      redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully updated.'
+      redirect_to tasks_url(listId: @task.listId), notice: 'Task was successfully updated.'
       Pusher.trigger('CreateTask', 'task', model: @task)
     else
-      redirect_to controller: 'tasks', action: 'index', listId: list_param, notice: 'Something wrong!'
+      errors
+      redirect_to tasks_url(listId: @task.listId)
     end
   end
 
   def update
     if @task.update(task_params)
-      redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully updated.'
+      redirect_to tasks_url(listId: @task.listId), notice: 'Task was successfully updated.'
       @task.userId = current_user.id
       Pusher.trigger('UpdateTask', 'task', model: @task)
     else
-      redirect_to controller: 'tasks', action: 'index', listId: list_param, notice: 'Something wrong!'
+      errors
+      redirect_to tasks_url(listId: @task.listId)
     end
   end
 
   def destroy
-    redirect_to controller: 'tasks', action: 'index', listId: @task.listId, notice: 'Task was successfully destroyed.'
+    redirect_to tasks_url(listId: @task.listId), notice: 'Task was successfully destroyed.'
     @task.userId = current_user.id
     Pusher.trigger('DestroyTask', 'task', model: @task)
     @task.destroy
